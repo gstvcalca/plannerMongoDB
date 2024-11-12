@@ -18,12 +18,31 @@ import { getTripDetails } from './routes/get-trip-details'
 import { getParticipant } from './routes/get-participant'
 import { errorHandler } from './error-handler'
 import { env } from './env'
+import { getUsersRoute } from './routes/getUsers'
+import mongoose from 'mongoose'
 
-const app = fastify()
+
+const app = fastify({logger: true});
+
+app.register(getUsersRoute);
+
+const start = async () => {
+  try {
+    await app.listen({port: env.PORT});
+  } catch (error) {
+    app.log.error(error);
+    process.exit(1);
+  }
+}
+
+start();
 
 app.register(cors, {
   origin: '*',
-})
+});
+
+mongoose.connect('mongodb+srv://gstvcalca:HImcT4qW9ElORn2L@cluster0.piknxu4.mongodb.net/planner', {}).then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Could not connect to MongoDB', err));
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
@@ -43,6 +62,6 @@ app.register(updateTrip)
 app.register(getTripDetails)
 app.register(getParticipant)
 
-app.listen({ port: env.PORT }).then(() => {
-  console.log('Server running!')
-})
+// app.listen({ port: env.PORT }).then(() => {
+//   console.log('Server running!')
+// })

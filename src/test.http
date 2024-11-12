@@ -1,0 +1,17 @@
+### GET ALL USERS
+GET http://localhost:3333/users HTTP/1.1
+
+### GET ONE USERS
+GET http://localhost:3333/users/1 HTTP/1.1
+Content-Type: application/json
+
+
+### ADD USER
+POST http://localhost:3333/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Gustavo",
+   "email": "gstv@planner.com",
+    "url": "https://cdn.esahubble.org/archives/images/screen/jwst_in_space-cc.jpg"
+}
