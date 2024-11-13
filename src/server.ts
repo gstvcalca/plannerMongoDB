@@ -18,13 +18,13 @@ import { getTripDetails } from './routes/get-trip-details'
 import { getParticipant } from './routes/get-participant'
 import { errorHandler } from './error-handler'
 import { env } from './env'
-import { getUsersRoute } from './routes/getUsers'
+import { createUser, deleteUserById, getAllUsers, getUserById } from './routes/get-users'
 import mongoose from 'mongoose'
 
 
 const app = fastify({logger: true});
 
-app.register(getUsersRoute);
+
 
 const start = async () => {
   try {
@@ -49,6 +49,10 @@ app.setSerializerCompiler(serializerCompiler)
 
 app.setErrorHandler(errorHandler)
 
+app.register(getAllUsers);
+app.register(getUserById);
+app.register(deleteUserById);
+app.register(createUser);
 app.register(createTrip)
 app.register(confirmTrip)
 app.register(confirmParticipants)
