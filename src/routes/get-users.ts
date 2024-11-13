@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../models/user-model';
-import { validate } from 'uuid';
 import { isValidObjectId } from 'mongoose';
 
 interface UserParams {
