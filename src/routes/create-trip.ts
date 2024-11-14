@@ -5,6 +5,7 @@ import { prisma } from '../lib/prisma'
 import { dayjs } from '../lib/dayjs'
 import { ClientError } from '../errors/client-error'
 import { env } from '../env'
+import { Trip } from '../models/trip-model'
 
 export async function createTrip(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -99,4 +100,13 @@ export async function createTrip(app: FastifyInstance) {
       return { tripId: trip.id }
     },
   )
+}
+
+export async function createTripMongo(app: FastifyInstance){
+  app.post('/trips', async (req, reply) => {
+    const trip = new Trip(req.body);
+    const success = await trip.save();
+    console.log(success);
+    return {trip}
+  })
 }
