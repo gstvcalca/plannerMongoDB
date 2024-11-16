@@ -17,10 +17,7 @@ const tripSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  is_confirmed: {
-    type: Boolean,
-    required: false,
-  },
+  is_confirmed: Boolean,
   created_by: {
     type: String,
     required: true,

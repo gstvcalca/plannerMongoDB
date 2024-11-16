@@ -104,9 +104,12 @@ export async function createTrip(app: FastifyInstance) {
 
 export async function createTripMongo(app: FastifyInstance){
   app.post('/trips', async (req, reply) => {
-    const trip = new Trip(req.body);
-    const success = await trip.save();
-    console.log(success);
-    return {trip}
+    try {
+      const newTrip = new Trip(req.body);
+      await newTrip.save();
+      reply.status(201).send({ message: 'Trip created successfully', trip: newTrip });
+    } catch (error: any) {
+      reply.status(400).send({ error: error.message });
+    }
   })
 }

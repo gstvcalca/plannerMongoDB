@@ -24,17 +24,62 @@ Content-Type: application/json
 DELETE http://localhost:3333/users/6733209971ffbdd3d1ac5969 HTTP/1.1
 Content-Type: application/json
 
+### Get trips
+GET http://localhost:3333/trips HTTP/1.1
+
 
 ### Create trip
 POST http://localhost:3333/trips HTTP/1.1
 Content-Type: application/json
 
 {
-    "destination": "Japan",
-    "starts_at": "2024-11-20T05:00:00.000Z",
-    "ends_at": "2024-11-25T05:00:00.000Z",
-    "is_confirmed": false,
-     "created_by": "Gustavo",
+  "destination": "Paris",
+  "starts_at": "2024-12-01T09:00:00Z",
+  "ends_at": "2024-12-10T18:00:00Z",
+  "is_confirmed": true,
+  "created_by": "user@example.com",
+  "img_url": "https://example.com/paris.jpg",
+  "description": "A delightful trip to Paris during the holiday season.",
+  "guests": [
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "url": "https://example.com/john"
+    },
+    {
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "url": "https://example.com/jane"
+    }
+  ],
+  "infos": [
+    {
+      "title": "Hotel Info",
+      "description": "We will stay at the Ritz Paris."
+    },
+    {
+      "title": "Flight Info",
+      "description": "Flight AC123 on December 1st at 9:00 AM."
+    }
+  ],
+  "links": [
+    {
+      "title": "Hotel Website",
+      "url": "https://ritzparis.com"
+    },
+    {
+      "title": "Flight Details",
+      "url": "https://airline.com/booking"
+    }
+  ],
+  "activities": [
+    {
+      "title": "City Tour",
+      "occurs_at": "2024-12-02T10:00:00Z"
+    },
+    {
+      "title": "Eiffel Tower Visit",
+      "occurs_at": "2024-12-03T14:00:00Z"
+    }
+  ]
 }
-
-mongodb+srv://gstvcalca:HImcT4qW9ElORn2L@cluster0.piknxu4.mongodb.net/
