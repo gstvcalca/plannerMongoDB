@@ -23,6 +23,7 @@ import mongoose from "mongoose";
 import { getUserById } from "./routes/get-user";
 import { deleteUserById } from "./routes/delete-user";
 import { createUser } from "./routes/create-user";
+import { getTrips } from "./routes/get-trips";
 
 const app = fastify({ logger: true });
 
@@ -43,7 +44,7 @@ app.register(cors, {
 
 mongoose
   .connect(
-    "mongodb+srv://gstvcalca:HImcT4qW9ElORn2L@cluster0.piknxu4.mongodb.net/planner",
+    "mongodb+srv://gstvcalca:" + env.DBPASS + "@cluster0.piknxu4.mongodb.net/planner",
     {}
   )
   .then(() => console.log("Connected to MongoDB"))
@@ -59,6 +60,7 @@ app.register(getUserById);
 app.register(deleteUserById);
 app.register(createUser);
 app.register(createTripMongo);
+app.register(getTrips);
 app.register(confirmTrip);
 app.register(confirmParticipants);
 app.register(createActivity);
