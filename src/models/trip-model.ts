@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { User } from "./user-model";
 
 const tripSchema = new mongoose.Schema({
   destination: {
@@ -8,20 +7,33 @@ const tripSchema = new mongoose.Schema({
     trim: true,
   },
   starts_at: {
-    type: Date,
+    type: String,
     required: true,
     trim: true,
   },
   ends_at: {
-    type: Date,
-    required: true,
-    trim: true,
-  },
-  is_confirmed: Boolean,
-  created_by: {
     type: String,
     required: true,
     trim: true,
+  },
+  created_by: {
+    _id: String,
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+    img_url: {
+      type: String,
+      trim: true,
+      required: true,
+    },
   },
   img_url: {
     type: String,
@@ -31,11 +43,15 @@ const tripSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  guests: [{
-    name: String,
-    email: String,
-    url: String
-}],
+  guests: [
+    {
+      _id: String,
+      name: String,
+      email: String,
+      url: String,
+      is_confirmed: Boolean,
+    },
+  ],
   infos: [
     {
       title: { type: String, trim: true },
@@ -45,7 +61,15 @@ const tripSchema = new mongoose.Schema({
   links: [
     { title: { type: String, trim: true }, url: { type: String, trim: true } },
   ],
-  activities: [{ title: { type: String, trim: true }, occurs_at: Date }],
+  activities: [
+    {
+      activity_date: String,
+      day_activities: [
+        { title: { type: String, trim: true }, occurs_at: String },
+      ],
+    },
+  ],
+  category: String,
 });
 
 export const Trip = mongoose.model("Trip", tripSchema);

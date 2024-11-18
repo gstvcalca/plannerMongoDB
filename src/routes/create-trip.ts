@@ -1,36 +1,59 @@
 import type { FastifyInstance } from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { z } from 'zod'
-import { prisma } from '../lib/prisma'
 import { dayjs } from '../lib/dayjs'
 import { ClientError } from '../errors/client-error'
-import { env } from '../env'
 import { Trip } from '../models/trip-model'
+import { CreateTripParams } from '../models/params-model'
+import { User } from '../models/user-model'
+import { format } from 'date-fns'
 
-export async function createTrip(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().post(
-    '/trips',
-    {
-      schema: {
-        body: z.object({
-          destination: z.string().min(4),
-          starts_at: z.coerce.date(),
-          ends_at: z.coerce.date(),
-          owner_name: z.string(),
-          owner_email: z.string().email(),
-          emails_to_invite: z.array(z.string().email()),
-        }),
-      },
-    },
-    async (request) => {
+
+async function populateGuests(emails: string[]){
+  const guests = await Promise.all(
+    emails.map(async (email) => {
+      let user = await User.findOne({email});
+
+      if (!user) {
+        user = await User.create({email});
+      }
+
+      return({
+        _id: user._id.toString(),
+        name: user.name || null,
+        email: user.email,
+        img_url: user.img_url || null,
+        is_confirmed: false
+      });
+    })
+  );
+
+  return guests
+}
+
+function populateActivities(start: string, end: string){
+  const activities = [];
+  let currentDate = new Date(start);
+  const endDate = new Date(end);
+
+  while(currentDate <= endDate){
+    activities.push({
+      activity_date: format(new Date(currentDate), 'yyyy-MM-dd HH:mm:ss'),
+      day_activities: []
+    });
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return activities
+}
+
+export async function createTripMongo(app: FastifyInstance){
+  app.post<{Body: CreateTripParams}>('/trips', async (req, reply) => {
+    try {
       const {
         destination,
         starts_at,
         ends_at,
-        owner_name,
-        owner_email,
+        created_by,
         emails_to_invite,
-      } = request.body
+      } = req.body
 
       if (dayjs(starts_at).isBefore(new Date())) {
         throw new ClientError('Invalid trip start date.')
@@ -40,72 +63,26 @@ export async function createTrip(app: FastifyInstance) {
         throw new ClientError('Invalid trip end date.')
       }
 
-      const trip = await prisma.trip.create({
-        data: {
-          destination,
-          starts_at,
-          ends_at,
-          participants: {
-            createMany: {
-              data: [
-                {
-                  name: owner_name,
-                  email: owner_email,
-                  is_owner: true,
-                  is_confirmed: true,
-                },
-                ...emails_to_invite.map((email) => {
-                  return { email }
-                }),
-              ],
-            },
-          },
-        },
-      })
-
-      const formattedStartDate = dayjs(starts_at).format('LL')
-      const formattedEndDate = dayjs(ends_at).format('LL')
-
-      const confirmationLink = `${env.API_BASE_URL}/trips/${trip.id}/confirm`
-
-      // const mail = await getMailClient()
-
-      // const message = await mail.sendMail({
-      //   from: {
-      //     name: 'Equipe plann.er',
-      //     address: 'oi@plann.er',
-      //   },
-      //   to: {
-      //     name: owner_name,
-      //     address: owner_email,
-      //   },
-      //   subject: `Confirme sua viagem para ${destination} em ${formattedStartDate}`,
-      //   html: `
-      //   <div style="font-family: sans-serif; font-size: 16px; line-height: 1.6;">
-      //     <p>Você solicitou a criação de uma viagem para <strong>${destination}</strong> nas datas de <strong>${formattedStartDate}</strong> até <strong>${formattedEndDate}</strong>.</p>
-      //     <p></p>
-      //     <p>Para confirmar sua viagem, clique no link abaixo:</p>
-      //     <p></p>
-      //     <p>
-      //       <a href="${confirmationLink}">Confirmar viagem</a>
-      //     </p>
-      //     <p></p>
-      //     <p>Caso você não saiba do que se trata esse e-mail, apenas ignore esse e-mail.</p>
-      //   </div>
-      // `.trim(),
-      // })
-
-      // console.log(nodemailer.getTestMessageUrl(message))
-
-      return { tripId: trip.id }
-    },
-  )
-}
-
-export async function createTripMongo(app: FastifyInstance){
-  app.post('/trips', async (req, reply) => {
-    try {
-      const newTrip = new Trip(req.body);
+      const guests = await populateGuests(emails_to_invite);
+      const activities = populateActivities(starts_at, ends_at);
+      const img_url = 'https://static.wikia.nocookie.net/naruto/images/5/50/My%C5%8Dbokuzan.PNG';
+      const description = "Click here to enter your description";
+      const infos: any = [];
+      const links: any = [];
+      const category = '';
+      const newTrip = new Trip({
+        destination,
+        starts_at,
+        ends_at,
+        created_by,
+        img_url,
+        description,
+        guests,
+        infos,
+        links,
+        activities,
+        category
+      });
       await newTrip.save();
       reply.status(201).send({ message: 'Trip created successfully', trip: newTrip });
     } catch (error: any) {

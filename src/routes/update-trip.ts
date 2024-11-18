@@ -1,55 +1,71 @@
-import type { FastifyInstance } from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { z } from 'zod'
-import { prisma } from '../lib/prisma'
-import { dayjs } from '../lib/dayjs'
-import { ClientError } from '../errors/client-error'
+import type { FastifyInstance } from "fastify";
+import { Trip } from "../models/trip-model";
+import { UpdateTripParams } from "../models/params-model";
+import { User } from "../models/user-model";
+import { format } from "date-fns";
 
-export async function updateTrip(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().put(
-    '/trips/:tripId',
-    {
-      schema: {
-        params: z.object({
-          tripId: z.string().uuid(),
-        }),
-        body: z.object({
-          destination: z.string().min(4),
-          starts_at: z.coerce.date(),
-          ends_at: z.coerce.date(),
-        }),
-      },
-    },
-    async (request) => {
-      const { tripId } = request.params
-      const { destination, starts_at, ends_at } = request.body
+async function populateGuestsUpdate(emails: string[]) {
+  const guests = await Promise.all(
+    emails.map(async (email) => {
+      let user = await User.findOne({ email });
 
-      const trip = await prisma.trip.findUnique({
-        where: { id: tripId }
-      })
-
-      if (!trip) {
-        throw new ClientError('Trip not found')
+      if (!user) {
+        user = await User.create({ email });
       }
+      return {
+        _id: user._id.toString(),
+        name: user.name || null,
+        email: user.email,
+        img_url: user.img_url || null,
+        is_confirmed: false,
+      };
+    })
+  );
+  return guests;
+}
 
-      if (dayjs(starts_at).isBefore(new Date())) {
-        throw new ClientError('Invalid trip start date.')
-      }
+function populateActivitiesUpdate(tripInfo: UpdateTripParams) {
+  const newActivities = tripInfo.activities;
+  let currentDate = new Date(tripInfo.starts_at);
+  const endDate = new Date(tripInfo.ends_at);
+  const startTime = new Date(tripInfo.starts_at).getTime();
+  const endTime = new Date(tripInfo.ends_at).getTime();
 
-      if (dayjs(ends_at).isBefore(starts_at)) {
-        throw new ClientError('Invalid trip end date.')
-      }
+  while (currentDate <= endDate) {
+    if (
+      !newActivities.find(
+        (item) =>
+          item.activity_date === format(currentDate, "yyyy-MM-dd HH:mm:ss")
+      )
+    ) {
+      newActivities.push({
+        activity_date: format(new Date(currentDate), "yyyy-MM-dd HH:mm:ss"),
+        day_activities: [],
+      });
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
 
-      await prisma.trip.update({
-        where: { id: tripId },
-        data: {
-          destination,
-          starts_at,
-          ends_at,
-        },
-      })
+  const dateFilter = newActivities.filter((item) => {
+    const itemTime = new Date(item.activity_date).getTime();
+    return itemTime >= startTime && itemTime <= endTime
+  });
 
-      return { tripId: trip.id }
-    },
-  )
+  return dateFilter;
+}
+
+export async function updateTripMongo(app: FastifyInstance) {
+  app.put<{ Body: UpdateTripParams }>("/trips/:tripid", async (req, reply) => {
+    const tripInfo = req.body;
+    const newActivities = populateActivitiesUpdate(tripInfo);
+    const guestsMail = tripInfo.guests.map((item) => item.email);
+    const newGuests = await populateGuestsUpdate(guestsMail);
+    console.log(newGuests);
+    const trip = await Trip.findByIdAndUpdate(
+      tripInfo._id,
+      { ...tripInfo, activities: newActivities, guests: newGuests },
+      { new: true }
+    );
+    return trip;
+  });
 }

@@ -3,6 +3,12 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 import { ClientError } from '../errors/client-error'
+import { Trip } from '../models/trip-model'
+import { TripParams, UserParams } from '../models/params-model'
+import { isValidObjectId } from 'mongoose'
+
+
+
 
 export async function getTripDetails(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -35,4 +41,16 @@ export async function getTripDetails(app: FastifyInstance) {
       return { trip }
     },
   )
+}
+
+export async function getTrip(app: FastifyInstance){
+  app.get<{Params: TripParams}>('/trips/:tripid', async (req, reply) => {
+    const {tripid} =  req.params;
+    if(isValidObjectId(tripid)){
+      const trip = await Trip.findById(tripid);
+      return {trip}
+    }else {
+      return {message: "Invalid trip ID provided." + tripid}
+    }
+  })
 }

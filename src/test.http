@@ -83,3 +83,9 @@ Content-Type: application/json
     }
   ]
 }
+
+### Get trip detail
+GET http://localhost:3333/trips/67390e527c820dcc50229ebf HTTP/1.1
+
+### Get all trips
+GET http://localhost:3333/trips HTTP/1.1

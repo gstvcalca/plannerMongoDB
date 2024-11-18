@@ -3,7 +3,6 @@ import mongoose, { mongo } from "mongoose";
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
         trim: true
     },
     email: {
@@ -12,9 +11,8 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
-    url: {
+    img_url: {
         type: String,
-        required: true,
         trim: true
     }
 })
@@ -24,5 +22,5 @@ export const User = mongoose.model("User", userSchema);
 export interface userInterface{
     name: string,
     email: string,
-    url: string
+    img_url: string
 }
