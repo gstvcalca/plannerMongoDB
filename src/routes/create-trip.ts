@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify'
-import { dayjs } from '../lib/dayjs'
 import { ClientError } from '../errors/client-error'
 import { Trip } from '../models/trip-model'
 import { CreateTripParams } from '../models/params-model'
@@ -55,11 +54,11 @@ export async function createTripMongo(app: FastifyInstance){
         emails_to_invite,
       } = req.body
 
-      if (dayjs(starts_at).isBefore(new Date())) {
+      if (new Date(starts_at).getTime() < new Date().getTime()) {
         throw new ClientError('Invalid trip start date.')
       }
 
-      if (dayjs(ends_at).isBefore(starts_at)) {
+      if (new Date(ends_at).getTime() < new Date(starts_at).getTime()) {
         throw new ClientError('Invalid trip end date.')
       }
 
