@@ -16,7 +16,7 @@ const app = fastify({ logger: true });
 
 const start = async () => {
   try {
-    await app.listen({ port: env.PORT });
+    await app.listen({ port: env.PORT, host: '0.0.0.0' });
   } catch (error) {
     app.log.error(error);
     process.exit(1);
@@ -24,6 +24,7 @@ const start = async () => {
 };
 
 start();
+console.log("Server is running on port" + env.PORT);
 
 app.register(cors, {
   origin: "*",
