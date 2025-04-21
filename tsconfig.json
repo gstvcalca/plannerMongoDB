@@ -3,6 +3,8 @@
   "_version": "20.1.0",
 
   "compilerOptions": {
+    "rootDir": "./src",       // ← where your .ts/.tsx files live
+    "outDir": "./dist",       // ← where you want the .js to go
     "lib": ["es2023"],
     "module": "node16",
     "target": "es2022",
@@ -11,5 +13,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16"
-  }
+  },
+  "include": ["src/**/*"]     // ← compile everything under src/
 }
