@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { isValidObjectId } from "mongoose";
-import { User } from "../models/user-model";
-import { UserParams } from "../models/params-model";
+import { User } from "../models/user-model.js";
+import { UserParams } from "../models/params-model.js";
 
 
 export async function deleteUserById(app: FastifyInstance){
