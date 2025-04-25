@@ -16,7 +16,7 @@ const app = fastify({ logger: true });
 
 const start = async () => {
   try {
-    await app.listen({ port: env.PORT, host: "0.0.0.0"});
+    await app.listen({ port: env.PORT, host: "0.0.0.0" });
   } catch (error) {
     app.log.error(error);
     process.exit(1);
@@ -27,13 +27,19 @@ start();
 console.log("Server is running on port" + env.PORT);
 
 app.register(cors, {
-  origin: ["https://plannermongodb.onrender.com", "https://gstvcalca.com"],
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
+  origin: [
+    "https://plannermongodb.onrender.com",
+    "https://gstvcalca.com",
+    "https://planner-nine-sooty.vercel.app",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
 });
 
 mongoose
   .connect(
-    "mongodb+srv://gstvcalca:" + env.DBPASS + "@cluster0.piknxu4.mongodb.net/planner",
+    "mongodb+srv://gstvcalca:" +
+      env.DBPASS +
+      "@cluster0.piknxu4.mongodb.net/planner",
     {}
   )
   .then(() => console.log("Connected to MongoDB"))

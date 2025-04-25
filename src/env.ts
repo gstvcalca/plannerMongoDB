@@ -7,4 +7,4 @@ const envSchema = z.object({
   DBPASS: z.string()
 })
 
-export const env = envSchema.parse(process.env)
+export const env = envSchema.parse(process.env);
