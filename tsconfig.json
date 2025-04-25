@@ -4,7 +4,7 @@
 
   "compilerOptions": {
     "rootDir": "./src",       // ← where your .ts/.tsx files live
-    "outDir": "./dist",       // ← where you want the .js to go
+    "outDir": "./public",       // ← where you want the .js to go
     "lib": ["es2023"],
     "module": "node16",
     "target": "es2022",
