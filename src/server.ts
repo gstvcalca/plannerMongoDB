@@ -1,16 +1,16 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
-import { createTripMongo } from "./routes/create-trip";
-import { updateTripMongo } from "./routes/update-trip";
-import { getTrip } from "./routes/get-trip-details";
-import { errorHandler } from "./error-handler";
-import { env } from "./env";
-import { getUsers } from "./routes/get-users";
+import { createTripMongo } from "./routes/create-trip.js";
+import { updateTripMongo } from "./routes/update-trip.js";
+import { getTrip } from "./routes/get-trip-details.js";
+import { errorHandler } from "./error-handler.js";
+import { env } from "./env.js";
+import { getUsers } from "./routes/get-users.js";
 import mongoose from "mongoose";
-import { getUserById } from "./routes/get-user";
-import { deleteUserById } from "./routes/delete-user";
-import { createUser } from "./routes/create-user";
-import { getTrips } from "./routes/get-trips";
+import { getUserById } from "./routes/get-user.js";
+import { deleteUserById } from "./routes/delete-user.js";
+import { createUser } from "./routes/create-user.js";
+import { getTrips } from "./routes/get-trips.js";
 
 const app = fastify({ logger: true });
 
