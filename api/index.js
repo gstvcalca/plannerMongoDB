@@ -28,7 +28,11 @@ export default async function handler(req, res) {
     const app = fastify({ logger: true });
 
     await app.register(cors, {
-      origin: ["https://plannermongodb.onrender.com", "https://gstvcalca.com"],
+      origin: [
+        "https://plannermongodb.onrender.com",
+        "https://gstvcalca.com",
+        "https://planner-mongodb-gustavo.vercel.app",
+      ],
       methods: ["GET", "POST", "PUT", "DELETE"],
     });
 
