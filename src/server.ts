@@ -27,7 +27,7 @@ start();
 console.log("Server is running on port" + env.PORT);
 
 app.register(cors, {
-  origin: ["https://plannermongodb.onrender.com"],
+  origin: ["https://plannermongodb.onrender.com, https://gstvcalca.com"],
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
