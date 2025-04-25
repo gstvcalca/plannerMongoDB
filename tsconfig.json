@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "moduleResolution": "node16"
   },
-  "include": ["src/**/*", "api"]     // ← compile everything under src/
+  "include": ["src/**/*", "api", "env.ts"]     // ← compile everything under src/
 }

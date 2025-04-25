@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { isValidObjectId } from "mongoose";
-import { UserParams } from "./params-model.js";
-import { User } from "./user-model.js";
+import { User, UserParams } from "./models.js";
+
 
 
 export async function getUserById(app: FastifyInstance) {

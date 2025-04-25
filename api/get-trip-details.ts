@@ -1,6 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { Trip } from './trip-model.js'
-import { TripParams, UserParams } from './params-model.js'
+import { Trip, TripParams, UserParams } from './models.js'
 import { isValidObjectId } from 'mongoose'
 
 

@@ -1,7 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { Trip } from "./trip-model.js";
-import { UpdateTripParams } from "./params-model.js";
-import { User } from "./user-model.js";
+import { Trip, UpdateTripParams, User } from "./models.js";
 import { format } from "date-fns";
 
 async function populateGuestsUpdate(emails: string[]) {
@@ -48,7 +46,7 @@ function populateActivitiesUpdate(tripInfo: UpdateTripParams) {
 
   const dateFilter = newActivities.filter((item) => {
     const itemTime = new Date(item.activity_date).getTime();
-    return itemTime >= startTime && itemTime <= endTime
+    return itemTime >= startTime && itemTime <= endTime;
   });
 
   return dateFilter;

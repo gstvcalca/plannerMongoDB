@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify"
-import { ClientError } from "./client-error.js"
 import { ZodError } from "zod"
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
@@ -12,7 +11,7 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
     })
   }
 
-  if (error instanceof ClientError) {
+  if (error instanceof class ClientError extends Error {}) {
     return reply.status(400).send({
       message: error.message
     })

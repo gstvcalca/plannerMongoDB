@@ -1,8 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { ClientError } from './client-error.js'
-import { Trip } from './trip-model.js'
-import { CreateTripParams } from './params-model.js'
-import { User } from './user-model.js'
+import { CreateTripParams, Trip, User } from './models.js'
 import { format } from 'date-fns'
 
 
@@ -55,11 +52,11 @@ export async function createTripMongo(app: FastifyInstance){
       } = req.body
 
       if (new Date(starts_at).getTime() < new Date().getTime()) {
-        throw new ClientError('Invalid trip start date.')
+        throw new class ClientError extends Error {}('Invalid trip start date.')
       }
 
       if (new Date(ends_at).getTime() < new Date(starts_at).getTime()) {
-        throw new ClientError('Invalid trip end date.')
+        throw new class ClientError extends Error {}('Invalid trip end date.')
       }
 
       const guests = await populateGuests(emails_to_invite);
