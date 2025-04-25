@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { User } from '../models/user-model.js';
+import { User } from '../src/models/user-model.js';
 
 
 export async function getUsers(app: FastifyInstance) {

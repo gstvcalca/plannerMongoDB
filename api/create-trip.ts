@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify'
-import { ClientError } from '../errors/client-error.js'
-import { Trip } from '../models/trip-model.js'
-import { CreateTripParams } from '../models/params-model.js'
-import { User } from '../models/user-model.js'
+import { ClientError } from '../src/errors/client-error.js'
+import { Trip } from '../src/models/trip-model.js'
+import { CreateTripParams } from '../src/models/params-model.js'
+import { User } from '../src/models/user-model.js'
 import { format } from 'date-fns'
 
 
