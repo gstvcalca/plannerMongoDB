@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { Trip } from "../src/models/trip-model.js";
+import { Trip } from "./trip-model.js";
 
 export async function getTrips(app: FastifyInstance){
     app.get('/trips', async (req, reply) => {

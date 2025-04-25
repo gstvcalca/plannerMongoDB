@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import { Trip } from "../src/models/trip-model.js";
-import { UpdateTripParams } from "../src/models/params-model.js";
-import { User } from "../src/models/user-model.js";
+import { Trip } from "./trip-model.js";
+import { UpdateTripParams } from "./params-model.js";
+import { User } from "./user-model.js";
 import { format } from "date-fns";
 
 async function populateGuestsUpdate(emails: string[]) {
