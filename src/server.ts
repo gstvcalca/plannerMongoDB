@@ -5,7 +5,7 @@ import { updateTripMongo } from "./api/update-trip.js";
 import { getTrip } from "./api/get-trip-details.js";
 import { errorHandler } from "./error-handler.js";
 import { env } from "./env.js";
-import { getUsers } from "./api/get-users.js";
+import { getUsers } from "./api/users.js";
 import mongoose from "mongoose";
 import { getUserById } from "./api/get-user.js";
 import { deleteUserById } from "./api/delete-user.js";
