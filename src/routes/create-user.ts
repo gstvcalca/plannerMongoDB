@@ -1,7 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { User } from "./models.js";
-
-
+import { User } from "../models/user-model";
 
 export async function createUser(app: FastifyInstance) {
   app.post("/users", async (req, reply) => {

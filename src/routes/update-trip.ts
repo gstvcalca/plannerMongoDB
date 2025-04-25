@@ -1,6 +1,8 @@
 import type { FastifyInstance } from "fastify";
-import { Trip, UpdateTripParams, User } from "./models.js";
 import { format } from "date-fns";
+import { User } from "../models/user-model";
+import { UpdateTripParams } from "../models/params-model";
+import { Trip } from "../models/trip-model";
 
 async function populateGuestsUpdate(emails: string[]) {
   const guests = await Promise.all(
